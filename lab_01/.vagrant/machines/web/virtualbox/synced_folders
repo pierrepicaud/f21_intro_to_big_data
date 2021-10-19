@@ -1,0 +1,1 @@
+{"virtualbox":{"/srv/website":{"guestpath":"/srv/website","hostpath":"/home/erklarungsnot/Git/idb/lab_01/src","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/erklarungsnot/Git/idb/lab_01","disabled":false,"__vagrantfile":true}}}

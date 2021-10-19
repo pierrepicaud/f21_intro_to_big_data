@@ -5,6 +5,9 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+BOX_IMAGE = "ubuntu/bionic64"
+NODE_COUNT = 2
+
 Vagrant.configure("2") do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -12,9 +15,35 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "ubuntu/bionic64"
-  config.vm.provision:shell, path:"bootstrap.sh"
-  config.vm.network :forwarded_port, guest: 80, host: 4567
+  config.vm.define "master" do |subconfig|
+    subconfig.vm.box = BOX_IMAGE
+    subconfig.vm.hostname = "master"
+    subconfig.vm.provision:shell, path:"bootstrap.sh"
+    subconfig.vm.synced_folder "./src/", "/srv/website"
+    # subconfig.vm.network :private_network, ip: "10.0.0.10"
+    # subconfig.vm.network :forwarded_port, guest: 80, host: 49151
+    subconfig.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge:"enp2s0"
+  end
+
+  (1..NODE_COUNT).each do |i|
+    config.vm.define "node#{i}" do |subconfig|
+      subconfig.vm.box = BOX_IMAGE
+      subconfig.vm.hostname = "node#{i}"
+      # subconfig.vm.network :private_network, ip: "10.0.0.1#{i+1}"
+      # subconfig.vm.network "public_network", use_dhcp_assigned_default_route: true
+      subconfig.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: [
+        "enp2s0",
+        "wlp3s0",
+        "docker0",
+        "br-be58793cbbd6",
+        "br-2c4f82a2a40e",
+        "br-4749f25c74cd",
+        "br-6f62758ce832",
+      ]
+    end
+  end
+
+  
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
