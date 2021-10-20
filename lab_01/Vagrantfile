@@ -20,26 +20,18 @@ Vagrant.configure("2") do |config|
     subconfig.vm.hostname = "master"
     subconfig.vm.provision:shell, path:"bootstrap.sh"
     subconfig.vm.synced_folder "./src/", "/srv/website"
-    # subconfig.vm.network :private_network, ip: "10.0.0.10"
+    subconfig.vm.network :private_network, ip: "10.0.0.10"
     # subconfig.vm.network :forwarded_port, guest: 80, host: 49151
-    subconfig.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge:"enp2s0"
+    subconfig.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge:"wlp3s0"
   end
 
   (1..NODE_COUNT).each do |i|
     config.vm.define "node#{i}" do |subconfig|
       subconfig.vm.box = BOX_IMAGE
       subconfig.vm.hostname = "node#{i}"
-      # subconfig.vm.network :private_network, ip: "10.0.0.1#{i+1}"
+      subconfig.vm.network :private_network, ip: "10.0.0.1#{i+1}"
       # subconfig.vm.network "public_network", use_dhcp_assigned_default_route: true
-      subconfig.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: [
-        "enp2s0",
-        "wlp3s0",
-        "docker0",
-        "br-be58793cbbd6",
-        "br-2c4f82a2a40e",
-        "br-4749f25c74cd",
-        "br-6f62758ce832",
-      ]
+      subconfig.vm.network "public_network", use_dhcp_assigned_default_route: true, bridge: "wlp3s0"
     end
   end
 
