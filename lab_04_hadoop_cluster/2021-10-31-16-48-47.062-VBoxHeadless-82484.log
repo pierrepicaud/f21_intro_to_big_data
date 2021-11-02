@@ -1,0 +1,12 @@
+Log created: 2021-10-31T16:48:47.625265000Z
+Process ID:  82484 (0x14234)
+Parent PID:  6502 (0x1966)
+Executable:  /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: lab_04_hadoop_cluster_server-1_1635670691982_63012
+Arg[3]: --startvm
+Arg[4]: 623b2a10-cdab-464e-85cb-b74b0bef0f92
+Arg[5]: --vrde
+Arg[6]: config
+AddRef: illegal refcnt=3221225469 state=2
